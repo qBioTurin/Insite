@@ -6,8 +6,7 @@ Install the required R libraries using `renv`.
 
 Run the following in your terminal:
 
-```
-bash
+```{bash}
 git clone git@github.com:qBioTurin/Insite.git
 cd Insite
 
@@ -20,6 +19,8 @@ renv::restore(prompt = FALSE)"
 1. Clone the repository using your preferred method
 2. Open the project in RStudio (or create an .Rproj file in the folder)
 3. Run the following in the R console:
-```install.packages('renv', repos = 'https://cloud.r-project.org')
-options(repos = c(CRAN = 'https://cloud.r-project.org'))
-renv::restore(prompt = FALSE)```
+  ```
+  install.packages('renv', repos = 'https://cloud.r-project.org')
+  options(repos = c(CRAN = 'https://cloud.r-project.org'))
+  renv::restore(prompt = FALSE)
+```
