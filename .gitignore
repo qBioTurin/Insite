@@ -1,0 +1,14 @@
+*.Rproj.user
+*.Rhistory
+.RData
+*.Ruserdata
+*.DS_Store
+*.Rprofile
+*.RDataTmp
+*.Rproj
+raw/
+*.json
+OutputSim
+scripts/Paper_Figures
+Data
+*.out
