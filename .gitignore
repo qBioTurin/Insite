@@ -12,3 +12,4 @@ OutputSim
 scripts/Paper_Figures
 Data
 *.out
+.Rproj.user
