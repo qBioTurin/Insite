@@ -7,9 +7,8 @@
 *.RDataTmp
 *.Rproj
 raw/
-*.json
 OutputSim
-scripts/Paper_Figures
+scripts
 Data
 *.out
 .Rproj.user

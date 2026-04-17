@@ -1,0 +1,92 @@
+{
+    "cellLife": 4,
+    "mutationRate": 2.66e-09,
+    "carryingCapacity": 1000000,
+    "mutableBases": 1000,
+    "endingTime": 1825,
+    "savingFrequency": 10,
+    "endingSize": 2000000,
+    "functionalEvents": [
+        {
+            "id": 1,
+            "name": "WT",
+            "type": "growth",
+            "frequency": 0,
+            "params": {
+                "proliferativeAdvantage": 0.1
+            }
+        },
+        {
+            "id": 2,
+            "name": "Res1",
+            "type": "competition",
+            "frequency": 1,
+            "params": {
+                "susceptibility": 0.1,
+                "offensiveScore": 1
+            }
+        },
+        {
+            "id": 3,
+            "name": "Res2",
+            "type": "competition",
+            "frequency": 1,
+            "params": {
+                "susceptibility": 0.1,
+                "offensiveScore": 1
+            }
+        },
+        {
+            "id": 4,
+            "name": "Res3",
+            "type": "competition",
+            "frequency": 1,
+            "params": {
+                "susceptibility": 0.1,
+                "offensiveScore": 1
+            }
+        },
+        {
+            "id": 5,
+            "name": "Res4",
+            "type": "competition",
+            "frequency": 1,
+            "params": {
+                "susceptibility": 0.1,
+                "offensiveScore": 1
+            }
+        },
+        {
+            "id": 6,
+            "name": "Res5",
+            "type": "competition",
+            "frequency": 1,
+            "params": {
+                "susceptibility": 0.1,
+                "offensiveScore": 1
+            }
+        },
+        {
+            "id": 7,
+            "name": "Res6",
+            "type": "competition",
+            "frequency": 1,
+            "params": {
+                "susceptibility": 0.1,
+                "offensiveScore": 1
+            }
+        }
+    ],
+    "populations": {
+        "genotype": [
+            1
+        ],
+        "phenotype": [
+            1
+        ],
+        "numCells": 1
+    },
+    "mutationDict": {
+        "Mut1": "1"
+    }
+}
