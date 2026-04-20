@@ -1,10 +1,10 @@
 library(Insite)
-if (!require("optparse")) install.packages("optparse",repos = "https://cloud.r-project.org")
-if (!require("ggplot2")) install.packages("ggplot2",repos = "https://cloud.r-project.org")
-#if (!require("patchwork")) install.packages("patchwork",repos = "https://cloud.r-project.org")
-#if (!require("colorspace")) install.packages("colorspace")
-
-option_list<-list(
+if (!require("optparse")) {
+  install.packages("optparse",repos = "https://cloud.r-project.org")
+  library(optparse)}
+library(ggplot2)
+  
+option_loption_loption_list<-list(
   make_option(
     c("--sim_dir"),
     type="character",

@@ -1,6 +1,11 @@
 library(Insite)
-if (!require("optparse")) install.packages("optparse",repos = "https://cloud.r-project.org")
-if (!require("rjson")) install.packages("rjson",repos = "https://cloud.r-project.org")
+if (!require("optparse")) {
+  install.packages("optparse",repos = "https://cloud.r-project.org")
+  library(optparse)}
+if (!require("rjson")) {
+  install.packages("rjson",repos = "https://cloud.r-project.org")
+  library(rjson)
+}
 
 option_list<-list(
   make_option(

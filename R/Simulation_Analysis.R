@@ -423,7 +423,7 @@ setMethod("get_tree_plot",
 #' @importFrom stats rnorm rbinom
 #' @import methods
 sequencing <- function(
-    Zprovv = NULL,
+    Zprovv,
     Clones_df = NULL,
     parameters,
     seed = NULL,
@@ -433,16 +433,12 @@ sequencing <- function(
     dens = NULL
 ) {
   
-  if (is.null(Zprovv) && is.null(Clones_df)) {
-    stop("Either Zprovv or Clones_df must be provided.")
-  }
-  
   if (is.null(Clones_df)) {
     Clones_df <- get_ordered_clones_sequencing(Zprovv)
   }
   
   if (is.null(dens)) {
-    dens <- default_dens
+    dens <- TCGA_dens
   }
   
   if (is.null(seed)) {
@@ -563,7 +559,7 @@ sequencing <- function(
       .id = "region"
     )
     
-    vcf_multiregional
+    list(vcf_multiregional,seq_min_y_list)
   })
   
   return(results)
