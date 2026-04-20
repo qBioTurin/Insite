@@ -5,7 +5,7 @@
 \title{Simulate sequencing from tumor data}
 \usage{
 sequencing(
-  Zprovv = NULL,
+  Zprovv,
   Clones_df = NULL,
   parameters,
   seed = NULL,

@@ -1,7 +1,12 @@
 library(Insite)
-if (!require("optparse")) install.packages("optparse",repos = "https://cloud.r-project.org")
-if (!require("stringr")) install.packages("stringr",repos = "https://cloud.r-project.org")
-
+if (!require("optparse")) {
+  install.packages("optparse",repos = "https://cloud.r-project.org")
+  library(rjson)
+}
+if (!require("stringr")) {
+  install.packages("stringr",repos = "https://cloud.r-project.org")
+  library(rjson)
+}
 option_list<-list(
   make_option(
     c("--sim_dir"),
@@ -99,8 +104,16 @@ load(file.path(path_sim, Zprovv_file))
 
 load(dens_path)
 
+if(is.null(Clones_ordered_path)){
+  Clones_df<-Insite:::get_ordered_clones_sequencing(Zprovv)
+  save(Clones_df,file = paste0(path_out,"/Clones_ordered_",seq_day,".RData"))
+}else{
+  load(Clones_ordered_path)
+}
+
 vcf_list <- sequencing(
   Zprovv = Zprovv,
+  Clones_df = Clones_df,
   parameters = parameters,
   seed = seed,
   n_regions = n_regions,
@@ -111,7 +124,7 @@ vcf_list <- sequencing(
 
 lapply(seq_along(vcf_list), function(i) {
   write.table(
-    vcf_list[[i]],
+    vcf_list[[i]][[1]],
     row.names = FALSE,
     file = file.path(path_out, paste0("vcf", i, ".txt"))
   )
