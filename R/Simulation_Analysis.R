@@ -564,3 +564,50 @@ sequencing <- function(
   
   return(results)
 }
+
+
+#' Calculate clonal nesting (n) and clonal diversity (D) indices
+#'
+#' This function computes the Inverse Simpson Index ($D$) and the mean 
+#' mutational burden ($n$) for a simulated tumor snapshot. It filters out 
+#' clones with a relative frequency below $10^{-2}$ before calculating the metrics.
+#'
+#' @param Zprovv A list of objects of class \code{Population_with_size_nmut} representing 
+#' a snapshot of the simulated tumor.
+#' @param threshold minimum frequency for clones to be included in the computation (relative to the whole mass)
+#'
+#' @return A \code{\link[tibble]{tibble}} containing two columns:
+#' \itemize{
+#'   \item \code{D}: clonal diversity.
+#'   \item \code{n}: clonal nesting.
+#' }
+#' 
+#' @importFrom tibble tibble
+#' @import methods
+#' @export
+#' 
+setGeneric("get_nD_index", function(Zprovv,threshold=10^(-2)) standardGeneric("get_nD_index"))
+
+#' @rdname get_nD_index
+setMethod("get_nD_index",
+          signature(Zprovv = "list"),
+          function(Zprovv,threshold=10^(-2)) {
+            
+            ncells <- sapply(Zprovv, Ncells)
+            prob <- ncells / sum(ncells)
+            
+            gen <- lengths(sapply(sapply(Zprovv, Population), genotype))
+            
+            keep <- prob > threshold
+            
+            prob_filt <- prob[keep] / sum(prob[keep])
+            gen_filt <- gen[keep]
+            
+            D <- 1 / sum(prob_filt^2)
+            n <- sum(gen_filt * prob_filt)
+            
+            nD_index <- tibble::tibble(D = D, n = n)
+            
+            return(nD_index)
+          }
+)

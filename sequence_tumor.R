@@ -1,12 +1,10 @@
 library(Insite)
+library(stringr)
 if (!require("optparse")) {
   install.packages("optparse",repos = "https://cloud.r-project.org")
   library(rjson)
 }
-if (!require("stringr")) {
-  install.packages("stringr",repos = "https://cloud.r-project.org")
-  library(rjson)
-}
+
 option_list<-list(
   make_option(
     c("--sim_dir"),
