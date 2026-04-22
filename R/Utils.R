@@ -175,6 +175,7 @@ setMethod("import_json_par",
             
             mut_names<-unlist(json_data$mutations)
             
+            if(!(dir.exists(path))){dir.create(path)}
             save(list=c("parameters",
                         "starting_gen",
                         "starting_fun_eff",
@@ -1393,4 +1394,155 @@ get_tree_plot_app<-function(df,palette){
     }
   }
   return(plot)
+}
+
+#' Create split tiles for ggplot-style visualizations
+#'
+#' Generates polygon coordinates to represent split tiles (two triangular halves)
+#' within each grid cell, typically for use with \code{ggplot2::geom_polygon()}.
+#'
+#' @param df A data frame containing the variables to plot.
+#' @param x_col Column for x-axis grouping (unquoted).
+#' @param y_col Optional column for y-axis grouping (unquoted). If missing,
+#'   all tiles are placed on a single row.
+#' @param value_col Column containing values associated with each tile (unquoted).
+#'   Not directly used for geometry but typically mapped to aesthetics.
+#' @param half_col Column indicating which half of the tile each observation
+#'   belongs to (unquoted). Must contain at least two distinct values.
+#' @param direction Character. Direction of the split:
+#'   \itemize{
+#'     \item \code{"bl_tr"}: diagonal from bottom-left to top-right
+#'     \item \code{"tl_br"}: diagonal from top-left to bottom-right
+#'   }
+#' @param half_levels Optional character vector of length 2 specifying which values
+#'   in \code{half_col} correspond to the two halves. If \code{NULL}, the first two
+#'   unique values are used.
+#'
+#' @details
+#' The function maps each (x, y) combination to a unit square and splits it into
+#' two triangular polygons according to \code{half_col}. It returns coordinates
+#' suitable for polygon plotting.
+#'
+#' If more than two values are present in \code{half_col}, only the first two are used.
+#' Observations with other values are ignored.
+#'
+#' @return A tibble containing the original data plus:
+#' \describe{
+#'   \item{x_label, y_label}{Character labels for axes.}
+#'   \item{x_pos, y_pos}{Numeric positions on the grid.}
+#'   \item{tile_idx}{Unique identifier for each tile.}
+#'   \item{px, py}{Polygon coordinates for plotting.}
+#' }
+#'
+#' @importFrom dplyr mutate pull left_join row_number
+#' @importFrom dplyr bind_rows
+#' @importFrom tibble tibble as_tibble
+#' @importFrom purrr pmap
+#' @importFrom rlang enquo quo_name
+#'
+#' @examples
+#' # Example usage (with ggplot2):
+#' # df_poly <- make_split_tiles(df, x, y, value, half)
+#' # ggplot(df_poly, aes(px, py, group = interaction(tile_idx, half))) +
+#' #   geom_polygon(aes(fill = value))
+#'
+make_split_tiles <- function(df,
+                             x_col, y_col,
+                             value_col, half_col,
+                             direction = c("bl_tr", "tl_br"),
+                             half_levels = NULL) {
+  
+  direction <- match.arg(direction)
+  x_q <- enquo(x_col)
+  value_q <- enquo(value_col)
+  half_q <- enquo(half_col)
+  
+  if (!missing(y_col)) {
+    y_q <- enquo(y_col)
+    
+    df2 <- df %>%
+      as_tibble() %>%
+      mutate(
+        x_label = as.character(!!x_q),
+        y_label = as.character(!!y_q)
+      )
+  }else{
+    df2 <- df %>%
+      as_tibble() %>%
+      mutate(
+        x_label = as.character(!!x_q),
+      )
+  }
+  
+  x_levels <- sort(unique(df%>%pull(!!x_q)))
+  if (!missing(y_col)){
+    y_levels <- sort(unique(df%>%pull(!!y_q)))
+  }
+  
+  if (!missing(y_col)){
+    df2 <- df2 %>%
+      mutate(
+        x_pos = match(x_label, x_levels),
+        y_pos = match(y_label, y_levels)
+      )
+  }else{
+    df2 <- df2 %>%
+      mutate(
+        x_pos = match(x_label, x_levels),
+        y_pos = 1
+      )
+  }
+  
+  half_vec <- pull(df2, !!half_q) %>% as.character()
+  if (is.null(half_levels)) {
+    half_levels <- unique(half_vec)
+    if (length(half_levels) < 2)
+      stop("`half_col` must contain at least two distinct values.")
+    if (length(half_levels) > 2)
+      warning("More than two half values found; using first two.")
+    half_levels <- half_levels[1:2]
+  }
+  
+  hl1 <- half_levels[1]
+  hl2 <- half_levels[2]
+  hw <- 0.5
+  hh <- 0.5
+  
+  df2 <- df2 %>% mutate(tile_idx = row_number())
+  
+  coords_list <- pmap(
+    list(x = df2$x_pos, y = df2$y_pos, half = df2[[quo_name(half_q)]], idx = df2$tile_idx),
+    function(x, y, half, idx) {
+      if (half == hl1) {
+        if (direction == "bl_tr") {
+          tibble(idx = idx,
+                 px = c(x - hw, x + hw, x + hw),
+                 py = c(y - hh, y - hh, y + hh))
+        } else {
+          tibble(idx = idx,
+                 px = c(x - hw, x - hw, x + hw),
+                 py = c(y - hh, y + hh, y + hh))
+        }
+      } else if (half == hl2) {
+        if (direction == "bl_tr") {
+          tibble(idx = idx,
+                 px = c(x - hw, x - hw, x + hw),
+                 py = c(y - hh, y + hh, y + hh))
+        } else {
+          tibble(idx = idx,
+                 px = c(x - hw, x + hw, x + hw),
+                 py = c(y - hh, y - hh, y + hh))
+        }
+      } else {
+        NULL
+      }
+    }
+  )
+  
+  coords_df <- bind_rows(coords_list)
+  
+  out <- df2 %>%
+    left_join(coords_df, by = c("tile_idx" = "idx"))
+  
+  return(out)
 }

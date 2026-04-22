@@ -441,12 +441,9 @@ sequencing <- function(
     dens <- TCGA_dens
   }
   
-  if (is.null(seed)) {
-    seed_selected <- as.integer(Sys.time())
-  } else {
-    seed_selected <- seed
+  if (!is.null(seed)) {
+    set.seed(seed)
   }
-  set.seed(seed_selected)
   
   pop <- lapply(Zprovv, Population)
   Pop_ID <- seq_along(pop)
@@ -565,6 +562,77 @@ sequencing <- function(
   return(results)
 }
 
+#' Theoretical sequencing output from clonal structure
+#'
+#' Computes a theoretical variant call format (VCF-like) table from a list of
+#' populations, aggregating mutations, functional effects, and variant allele
+#' prevalences (AP).
+#'
+#' @param Zprovv A list of objects of class \code{Population_with_size_nmut} representing 
+#' a snapshot of the simulated tumor.
+#' @param parameters An object of class \code{Parameters} containing model parameters.
+#' @param starting_gen A character vector representing the starting genotype.
+#'
+#' @details
+#' For each population, the function reconstructs cumulative mutation IDs,
+#' associates functional effects, and computes the total number of alleles carrying
+#' each mutation. Allele Prevalence (AP) is calculated as:
+#' \deqn{AP = ncells / (2 * total\_ncells)}
+#'
+#' Mutations corresponding to the starting genotype are excluded from the output.
+#'
+#' @return A tibble with the following columns:
+#' \describe{
+#'   \item{mut}{Character. Mutation identifier (cumulative genotype string).}
+#'   \item{fun_eff}{Numeric or character. Functional effect value.}
+#'   \item{fun_eff_label}{Character. Label of the functional effect.}
+#'   \item{ncells}{Numeric. Number of cells carrying the mutation.}
+#'   \item{AP}{Numeric. Variant allelic prevalence.}
+#' }
+#'
+#' @importFrom dplyr group_by summarise filter
+#' @importFrom tidyr unnest
+#' @importFrom tibble tibble
+#'
+#' @seealso \code{Population}, \code{genotype}, \code{functional_effect}, \code{Ncells}
+#'
+#' @examples
+#' # Example usage (pseudo-code, depends on class definitions):
+#' # vcf <- theoretical_sequencing(Zprovv, parameters,starting_gen)
+#'
+theoretical_sequencing <- function(
+    Zprovv,
+    parameters,
+    starting_mut
+){
+  pop<-lapply(Zprovv,Population)
+  gen<-lapply(pop,genotype)
+  fun_eff_num<-lapply(pop,functional_effect)
+  fun_eff<-lapply(fun_eff_num,function(n){parameters@functional_effects[n]})
+  if(is.null(names(parameters@functional_effects))){
+    fun_eff_label<-lapply(pop,get_fun_eff_label,functional_effects=parameters@functional_effects)
+  }else{
+    fun_eff_label<-lapply(fun_eff,names)
+  }
+  ncells<-sapply(Zprovv,Ncells)
+  tot_ncells<-sum(ncells)
+  unique_mut_id<-lapply(gen,function(g){
+    unique_id_mut<-vector()
+    for(i in 1:length(g)){
+      unique_id_mut<-c(unique_id_mut,paste(g[1:i],collapse="_"))
+    }
+    return(unique_id_mut)
+  })
+  
+  vcf<-tibble(mut=unique_mut_id,fun_eff,fun_eff_label,ncells)%>%
+    unnest(c(mut,fun_eff,fun_eff_label))%>%
+    filter(mut!=starting_mut)%>%
+    group_by(mut,fun_eff,fun_eff_label)%>%
+    summarise(ncells=sum(ncells),
+              VAF=ncells/(2*tot_ncells))
+  
+  return(vcf)
+}
 
 #' Calculate clonal nesting (n) and clonal diversity (D) indices
 #'
