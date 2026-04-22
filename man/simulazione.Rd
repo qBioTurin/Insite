@@ -15,7 +15,8 @@ simulation(
   parameters,
   tmax,
   Ncellsmax,
-  epsilon_rel
+  epsilon_rel,
+  only_last = FALSE
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ parameters.}
 \item{Ncellsmax}{Optional maximum population size used as stopping criterion.}
 
 \item{epsilon_rel}{Maximum error ammitted at each simulative step (relatively to the simulation parameters)}
+
+\item{only_last}{logical. If TRUE only the last time stamp will we saved,
+representing the ending status of the simulation.}
 }
 \value{
 This creates a simulation output directory, saves intermediate \code{.RData} files

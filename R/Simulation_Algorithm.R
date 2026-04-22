@@ -20,6 +20,8 @@
 #' @param tmax Maximum simulation time.
 #' @param Ncellsmax Optional maximum population size used as stopping criterion.
 #' @param epsilon_rel Maximum error ammitted at each simulative step (relatively to the simulation parameters)
+#' @param only_last logical. If TRUE only the last time stamp will we saved, 
+#'    representing the ending status of the simulation.
 #' @return
 #' This creates a simulation output directory, saves intermediate `.RData` files
 #' containing  `Zprovv`, which are snapshot of tumor evolution at different times and
@@ -34,7 +36,18 @@
 #' @name simulazione
 #' @rdname simulazione
 #' @export
-simulation<-function(Nexp,seed,path,starting_gen,starting_fun_eff,Ncells_start,parameters,tmax,Ncellsmax,epsilon_rel){
+simulation<-function(
+    Nexp,
+    seed,
+    path,
+    starting_gen,
+    starting_fun_eff,
+    Ncells_start,
+    parameters,
+    tmax,
+    Ncellsmax,
+    epsilon_rel,
+    only_last=FALSE){
   tryCatch(expr = {
     set.seed(seed+Nexp)
     if(length(starting_fun_eff)!=length(starting_gen)){stop("Check genotype and functional effect association")}
@@ -81,8 +94,8 @@ simulation<-function(Nexp,seed,path,starting_gen,starting_fun_eff,Ncells_start,p
       time_provv<-0
       unlink(path_sim,recursive =TRUE)
       dir.create(path_sim,recursive =TRUE)
-      save(list = c("Zprovv","time_provv"),
-           file=paste(path_sim,"/Zprovv",count,".RData",sep=""))
+      if(!only_last){save(list = c("Zprovv","time_provv"),
+           file=paste(path_sim,"/Zprovv",count,".RData",sep=""))}
       check_cond_end<-TRUE
       
       
@@ -114,11 +127,17 @@ simulation<-function(Nexp,seed,path,starting_gen,starting_fun_eff,Ncells_start,p
         }
         
         if(time_provv>=parameters@print_time[count+1]){
-          save(list = c("Zprovv","time_provv"),
-               file=paste(path_sim,"/Zprovv",count,".RData",sep=""))
+          if(!only_last){
+            save(list = c("Zprovv","time_provv"),
+                 file=paste(path_sim,"/Zprovv",count,".RData",sep=""))
+          }
           count<-count+1
-          #print(time_provv)
         }
+      }
+      
+      if(only_last){
+        save(list = c("Zprovv","time_provv"),
+             file=paste(path_sim,"/ZprovvFinal.RData",sep=""))
       }
     }
     },
