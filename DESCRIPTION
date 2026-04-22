@@ -1,11 +1,10 @@
 Package: Insite
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Insite Cancer Evolution Model
+Version: 0.1.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Daniela", "Volpatto", , "Daniela.volpatto@unito.it", role = c("aut", "cre"))
+Description: Insite is a package for simulating clonal evolution creating synthetic tumors, plotting them and analyzing
+License: `use_gpl3_license()`
 Depends: 
     R (>= 3.5)
 Imports: 
