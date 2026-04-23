@@ -37,14 +37,14 @@ The `.R` files located directly in the `/scripts` folder (e.g., `run_simulation.
 ### Option 1: Docker (Recommended)
 To ensure a consistent environment with all dependencies pre-installed:
 ```bash
-docker pull tuo-username/insite:latest
-docker run -it tuo-username/insite R
+docker pull qbioturin/insite:latest
+docker run -it qbioturin/insite R
 ```
 
 ### Option 2: Local R Installation
 ```R
 # install.packages("devtools")
-devtools::install_github("tuo-username/Insite")
+devtools::install_github("qBioTurin/Insite")
 ```
 
 ## 🛠 Reproducibility Guide
