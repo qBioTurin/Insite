@@ -23,7 +23,7 @@ This folder contains the processed data required to generate the paper's figures
 * `Experiment1/` & `Experiment2/`: Data regarding synthetic experiments - **Supplementary Material**.
 
 ### 2. Analysis & Figures (`/scripts`)
-* `PaperAnalysis/`: Scripts that bridge the gap between raw simulation outputs and processed data. These scripts perform the statistical processing that justifies our findings.
+* `PaperAnalysis/`: Scripts that bridge the gap between raw simulation outputs contained in the Zenodo repo and processed data.
 * `PaperFigures/`: R scripts dedicated to generating the specific figures (e.g., `Fig3.R`, `Fig5.R`). 
     * *Note:* These scripts are designed for interactive use (e.g., within RStudio). They will render plots directly to your active graphics device rather than saving files to disk.
 
