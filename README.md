@@ -1,5 +1,5 @@
 # A New Cancer Progression Model
-# *From synthetic tumors to real data and back*
+*From synthetic tumors to real data and back*
 
 This repository contains the core **Insite** R package, the data analysis pipelines, and the scripts required to reproduce all results and figures presented in our publication.
 
