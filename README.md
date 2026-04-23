@@ -9,7 +9,7 @@ This repository contains the core **Insite** R package, the data analysis pipeli
 To ensure both user-friendliness and scientific reproducibility, the project is divided into three components:
 
 * **Insite (This Repository):** The core R package, processed data, and scripts for analysis and figure generation.
-* **[Insite_Interface](LASCIA_QUI_IL_LINK_A_INSITE_INTERFACE):** A Docker-based Shiny application providing a graphical user interface for interactive simulations.
+* **[Insite_Interface](https://github.com/qBioTurin/Insite_Interface):** A Docker-based NextJS application providing a graphical user interface for interactive simulations.
 * **[Zenodo Dataset](LASCIA_QUI_IL_LINK_A_ZENODO):** A permanent archive containing the complete raw simulation outputs used in the study.
 
 ---
