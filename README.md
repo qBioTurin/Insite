@@ -10,7 +10,7 @@ To ensure both user-friendliness and scientific reproducibility, the project is 
 
 * **Insite (This Repository):** The core R package, processed data, and scripts for analysis and figure generation.
 * **[Insite_Interface](https://github.com/qBioTurin/Insite_Interface):** A Docker-based NextJS application providing a graphical user interface for interactive simulations.
-* **[Zenodo Dataset](LASCIA_QUI_IL_LINK_A_ZENODO):** A permanent archive containing the complete raw simulation outputs used in the study.
+* **[Zenodo Dataset](10.5281/zenodo.19821839):** A permanent archive containing the complete raw simulation outputs used in the study.
 
 ---
 
