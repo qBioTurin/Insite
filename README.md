@@ -64,6 +64,8 @@ git clone https://github.com/qBioTurin/Insite.git
 devtools::install_github("qBioTurin/Insite")
 ```
 
+---
+
 ## 🛠 Reproducibility Guide
 
 ### Level 1: Regenerating Figures (From elaborated data)
@@ -80,6 +82,8 @@ To verify the analysis by processing the raw simulation outputs yourself:
 1. Download the raw dataset from Zenodo (a compressed folder named OutputSim).
 2. Unzip it and place the `OutputSim` folder in the root directory of this repository. Do not rename it, otherwise the scripts will not work.
 3. Run the scripts in `scripts/PaperAnalysis/`. These will read from `OutputSim` and update the processed files in the `Data/` folder.
+
+---
 
 ## 🧪 Running New Simulations
 
