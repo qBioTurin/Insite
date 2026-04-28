@@ -90,9 +90,9 @@ For testing and as a reference for how parameters should be passed to the simula
 
 In detail:
 
-* ### `run_simulation.R`
+### `run_simulation.R`
 
-* Executes a new cancer simulation based on parameters specified in a `.json` file. At each timestep, the tumor state is saved as a timestamped `.RData` file in a folder named `simNexp`, where `Nexp` is provided by the user. This folder is created in the specified output directory.
+Executes a new cancer simulation based on parameters specified in a `.json` file. At each timestep, the tumor state is saved as a timestamped `.RData` file in a folder named `simNexp`, where `Nexp` is provided by the user. This folder is created in the specified output directory.
 The design supports running multiple simulations and facilitates parallelization over the `Nexp` argument.
 A seed can be specified to reproduce results. The effective seed is computed as `seed + Nexp`, allowing multiple runs to be reproducible with minimal information. Even if no seed is provided, the script records the seed used for the simulation in a `seed.txt` file.
 
@@ -105,9 +105,9 @@ A seed can be specified to reproduce results. The effective seed is computed as 
 
 Along with the simulation `.RData` files, the script will produce an auxiliary file `Parameters.RData` and place it in the directory indicated (`raw` by default).
 
-* ### `draw_plot.R`
+### `draw_plot.R`
 
-* Generates visual representations of the simulated tumor's evolutionary history, saving them as PDFs images. It produces both **Muller plots** (clonal dynamics over time) and **Phylogenetic trees**.
+Generates visual representations of the simulated tumor's evolutionary history, saving them as PDFs images. It produces both **Muller plots** (clonal dynamics over time) and **Phylogenetic trees**.
 
 | Option       | Description                                                                                      | Default                |
 | :----------- | :----------------------------------------------------------------------------------------------- | :--------------------- |
@@ -119,12 +119,12 @@ Along with the simulation `.RData` files, the script will produce an auxiliary f
 
 ### `sequence_tumor.R`
 
-* Performs the synthetic sequencing procedure described in the paper at a given time point (`seq_day`).
+Performs the synthetic sequencing procedure described in the paper at a given time point (`seq_day`).
 
-* This procedure exploits the neighborhood structure of clones based on their parental relationships: this is the most computationally expensive step. To avoid recomputation, once executed for a given timestep the script saves the result as a `Clones_ordered_seq_day.RData` file. This file can be reused in subsequent runs by providing its path via the `--neighborhood` argument, otherwise optional.
+This procedure exploits the neighborhood structure of clones based on their parental relationships: this is the most computationally expensive step. To avoid recomputation, once executed for a given timestep the script saves the result as a `Clones_ordered_seq_day.RData` file. This file can be reused in subsequent runs by providing its path via the `--neighborhood` argument, otherwise optional.
 * An additional optional argument, `--dens`, allows overriding the default probability distribution used to sample per-base coverage (DP). The function expects an object of class `Density`, which can be stored in a `.RData` file and passed to the script. A default density derived from TCGA pancancer data is included in the package. The script used to generate it is available in `scripts/PaperAnalysis/` as `density_coverage_TCGA.R`.
 
-* The function generates one or more VCF-like outputs (as specified by `--repeat`), each saved as a `.txt` file.
+The function generates one or more VCF-like outputs (as specified by `--repeat`), each saved as a `.txt` file.
 
 | Option           | Description                                                        | Default                |
 | :--------------- | :----------------------------------------------------------------- | :--------------------- |
@@ -138,9 +138,9 @@ Along with the simulation `.RData` files, the script will produce an auxiliary f
 | `--dens`         | Path to the DP coverage density (`.RData` file).                   | `Data/dens.RData`      |
 | `--seed`         | Seed for reproducible sequencing.                                  | `NULL`                 |
 
-* ### `derive_nD_indices.R`
+### `derive_nD_indices.R`
 
-* Calculates the **Clonal Nesting ($n$)** and **Clonal Diversity ($D$)** indices as defined by _[Noble et al. (2022)](https://doi.org/10.1038/s41559-021-01615-9)_. Results are exported to a `.txt` file.
+Calculates the **Clonal Nesting ($n$)** and **Clonal Diversity ($D$)** indices as defined by _[Noble et al. (2022)](https://doi.org/10.1038/s41559-021-01615-9)_. Results are exported to a `.txt` file.
 
 | Option       | Description                                                | Default    |
 | :----------- | :--------------------------------------------------------- | :--------- |
