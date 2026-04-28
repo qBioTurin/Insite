@@ -20,9 +20,9 @@ To ensure both user-friendliness and scientific reproducibility, the project is 
 
 This folder contains the processed data required to generate the paper's figures immediately.
 
-- `best_fit/`: Results from model fitting on real clinical cohorts (AML, Breast, Lung, etc.) - **Main Text**.
-- `Clonal_Architectures/`: Data and configurations for Experiment 3 - **Main Text**.
-- `Experiment1/` & `Experiment2/`: Data regarding synthetic experiments - **Supplementary Material**.
+- `best_fit/`: Results from model fitting on real clinical cohorts (AML, Breast, Lung, etc.) - **Main Text-Results**.
+- `nD_exp/`: Elaborated data used for the exploration of evolutionary paradigms - **Main Text-Results**.
+- `Experiment1/` & `Experiment2/`: Data regarding synthetic experiments runned for the systematic exploration of the model parameter space - **Supplementary Material S3**.
 
 #### Analysis & Figures (`/scripts`)
 
@@ -126,7 +126,7 @@ Generates visual representations of the simulated tumor's evolutionary history, 
 Performs the synthetic sequencing procedure described in the paper at a given time point (`seq_day`).
 
 This procedure exploits the neighborhood structure of clones based on their parental relationships: this is the most computationally expensive step. To avoid recomputation, once executed for a given timestep the script saves the result as a `Clones_ordered_seq_day.RData` file. This file can be reused in subsequent runs by providing its path via the `--neighborhood` argument, otherwise optional.
-* An additional optional argument, `--dens`, allows overriding the default probability distribution used to sample per-base coverage (DP). The function expects an object of class `Density`, which can be stored in a `.RData` file and passed to the script. A default density derived from TCGA pancancer data is included in the package. The script used to generate it is available in `scripts/PaperAnalysis/` as `density_coverage_TCGA.R`.
+An additional optional argument, `--dens`, allows overriding the default probability distribution used to sample per-base coverage (DP). The function expects an object of class `Density`, which can be stored in a `.RData` file and passed to the script. A default density derived from TCGA pancancer data is included in the package. The script used to generate it is available in `scripts/PaperAnalysis/` as `density_coverage_TCGA.R`.
 
 The function generates one or more VCF-like outputs (as specified by `--repeat`), each saved as a `.txt` file.
 
