@@ -4,7 +4,7 @@ library(tidyr)
 library(stringr)
 library(ggplot2)
 if(!require(patchwork)){
-  install.packages(patchwork)
+  install.packages("patchwork")
   library(patchwork)
 }
 

@@ -1,9 +1,9 @@
 if(!require(purrr)){
-  install.packages(purrr)
+  install.packages("purrr")
   library(purrr) 
 }
 if(!require(ggridges)){
-  install.packages(ggridges)
+  install.packages("ggridges")
   library(ggridges) 
 }
 library(dplyr)

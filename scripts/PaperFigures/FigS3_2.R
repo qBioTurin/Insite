@@ -1,5 +1,5 @@
 if(!require(purrr)){
-  install.packages(purrr)
+  install.packages("purrr")
   library(purrr) 
 }
 library(stringr)
