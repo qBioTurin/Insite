@@ -1,6 +1,7 @@
 library(Insite)
 if (!require("dplyr")) install.packages("dplyr",repos = "https://cloud.r-project.org")
 if (!require("tidyr")) install.packages("tidyr",repos = "https://cloud.r-project.org")
+if (!require("ggplot2")) install.packages("ggplot2",repos = "https://cloud.r-project.org")
 
 
 load("Data/best_fit/Noble_tum_data.RData")
