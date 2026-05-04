@@ -36,7 +36,8 @@ option_list<-list(
 
 opt_parser<-OptionParser(option_list = option_list)
 opt<-parse_args(opt_parser)
-
+path_params <- opt$params
+load(path_params)
 path_sim <- opt$sim_dir
 seq_day<-opt$seq_day
 path_out <- opt$path_out
