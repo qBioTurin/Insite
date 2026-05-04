@@ -1,4 +1,0 @@
-params_competition_sus0d5 7
-params_competition_sus0d01 1
-params_passenger 7
-params_growth_0d5 1
