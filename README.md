@@ -14,6 +14,23 @@ To ensure both user-friendliness and scientific reproducibility, the project is 
 
 ---
 
+## 🚀 Getting Started
+
+Clone the Github repository via
+
+```
+git clone https://github.com/qBioTurin/Insite.git
+```
+
+Open the project in RStudio and install the package via:
+
+```R
+# install.packages("devtools")
+devtools::install_github("qBioTurin/Insite")
+```
+
+---
+
 ## 📂 Repository Structure
 
 #### Data (`/Data`)
@@ -37,23 +54,6 @@ All the necessary for the R package `Insite` to work.
 #### CLI Simulation Wrappers (`/scripts` root)
 
 The `.R` files located directly in the `/scripts` folder (e.g., `run_simulation.R`) are command-line wrappers for the package functions. They use `optparse` and can be executed from a terminal with flags.
-
----
-
-## 🚀 Getting Started
-
-Clone the Github repository via
-
-```
-git clone https://github.com/qBioTurin/Insite.git
-```
-
-Open the project in RStudio and install the package via:
-
-```R
-# install.packages("devtools")
-devtools::install_github("qBioTurin/Insite")
-```
 
 ---
 
