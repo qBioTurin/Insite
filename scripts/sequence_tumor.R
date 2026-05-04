@@ -90,16 +90,18 @@ sim_files <- list.files(path_sim)
 sim_files <- sim_files[grepl("Zprovv", sim_files)]
 
 index_files <- as.numeric(str_remove(str_remove(sim_files, "Zprovv"), ".RData"))
+load(file.path(path_sim,sim_files[which.max(index_files)]))
+max_time<-time_provv
 
-if (seq_day == Inf) {
-  Zprovv_file <- sim_files[which.max(index_files)]
+if (seq_day == Inf|seq_day == "Inf"|seq_day>=max_time) {
+  seq_day_name<-"Final"
 } else {
   Zprovv_file <- sim_files[
-    index_files == which.min(abs(parameters@print_time - seq_day))
+    index_files == min(max(index_files),which.min(abs(parameters@print_time - seq_day)))
   ]
+  seq_day_name<-paste0("d",seq_day)
+  load(file.path(path_sim, Zprovv_file))
 }
-
-load(file.path(path_sim, Zprovv_file))
 
 load(dens_path)
 
@@ -125,6 +127,6 @@ lapply(seq_along(vcf_list), function(i) {
   write.table(
     vcf_list[[i]][[1]],
     row.names = FALSE,
-    file = file.path(path_out, paste0("vcf", i, ".txt"))
+    file = file.path(path_out, paste0(seq_day_name,"_vcf", i, ".txt"))
   )
 })

@@ -46,17 +46,19 @@ sim_files <- list.files(path_sim)
 sim_files <- sim_files[grepl("Zprovv", sim_files)]
 
 index_files <- as.numeric(str_remove(str_remove(sim_files, "Zprovv"), ".RData"))
+load(file.path(path_sim,sim_files[which.max(index_files)]))
+max_time<-time_provv
 
-if (seq_day == Inf) {
-  Zprovv_file <- sim_files[which.max(index_files)]
+if (seq_day == Inf|seq_day == "Inf"|seq_day>=max_time) {
   seq_day_name<-"Final"
 } else {
   Zprovv_file <- sim_files[
-    index_files == which.min(abs(parameters@print_time - seq_day))
+    index_files == min(max(index_files),which.min(abs(parameters@print_time - seq_day)))
   ]
   seq_day_name<-paste0("d",seq_day)
+  load(file.path(path_sim, Zprovv_file))
 }
-load(file.path(path_sim, Zprovv_file))
+
 
 nD_indices<-get_nD_index(Zprovv,10^(-2))%>%
   mutate(time=time_provv)
@@ -67,3 +69,4 @@ write.table(nD_indices,
             row.names = FALSE,
             col.names = TRUE,
             quote = FALSE)
+
