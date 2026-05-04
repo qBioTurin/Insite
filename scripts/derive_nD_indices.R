@@ -25,7 +25,14 @@ option_list<-list(
     type="numeric",
     default = Inf,
     help = "Day in which the sequencing is to be performed. Default is the end of the simulation"
-  ))
+  ),
+  make_option(
+    c("--params"),
+    type="character",
+    default = "raw/Parameters.RData",
+    help = "path of the .RData file with the elaborated parameters"
+  )
+)
 
 opt_parser<-OptionParser(option_list = option_list)
 opt<-parse_args(opt_parser)

@@ -79,6 +79,7 @@ seq_day<-opt$seq_day
 n_regions<-opt$nregions
 n_seq_cells<-opt$ncells
 Clones_ordered_path<-opt$neighborhood
+if(!is.null(Clones_ordered_path)&&Clones_ordered_path=="NULL"){Clones_ordered_path<-NULL}
 seed<-opt$seed
 Nrep<-opt$`repeat`
 dens_path<-opt$dens
