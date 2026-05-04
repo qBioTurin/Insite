@@ -142,6 +142,7 @@ Calculates the **Clonal Nesting ($n$)** and **Clonal Diversity ($D$)** indices a
 | `--sim_dir`  | Folder containing simulation outputs.                      | `raw/sim1` |
 | `--path_out` | Folder where the index results will be stored.             | `raw`      |
 | `--seq_day`  | Simulation day to analyze (use `Inf` for the final state). | `Inf`      |
+| `--params`       | Path to auxiliary `Parameters.RData` file.                         | `raw/Parameters.RData` |
 
 ---
 
