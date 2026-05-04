@@ -10,3 +10,5 @@ raw/
 OutputSim
 *.out
 .Rproj.user
+*.Rapp.history
+Data/Clonal_Architectures
