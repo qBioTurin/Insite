@@ -8,7 +8,5 @@
 *.Rproj
 raw/
 OutputSim
-scripts
-Data
 *.out
 .Rproj.user

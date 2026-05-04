@@ -1,0 +1,92 @@
+{
+    "cellLife": [
+        4
+    ],
+    "mutationRate": [
+        2.66e-09
+    ],
+    "carryingCapacity": [
+        1000000
+    ],
+    "mutableBases": [
+        100000
+    ],
+    "endingTime": [
+        1825
+    ],
+    "savingFrequency": [
+        10
+    ],
+    "endingSize": [
+        2000000
+    ],
+    "functionalEvents": [
+        {
+            "id": 1,
+            "name": "WT",
+            "type": "growth",
+            "frequency": 0,
+            "params": {
+                "proliferativeAdvantage": 0.1
+            }
+        },
+        {
+            "id": 2,
+            "name": "Passenger",
+            "type": "passenger",
+            "frequency": 1,
+            "params": {}
+        },
+        {
+            "id": 3,
+            "name": "Passenger",
+            "type": "passenger",
+            "frequency": 1,
+            "params": {}
+        },
+        {
+            "id": 4,
+            "name": "Passenger",
+            "type": "passenger",
+            "frequency": 1,
+            "params": {}
+        },
+        {
+            "id": 5,
+            "name": "Passenger",
+            "type": "passenger",
+            "frequency": 1,
+            "params": {}
+        },
+        {
+            "id": 6,
+            "name": "Passenger",
+            "type": "passenger",
+            "frequency": 1,
+            "params": {}
+        },
+        {
+            "id": 7,
+            "name": "Passenger",
+            "type": "passenger",
+            "frequency": 1,
+            "params": {}
+        }
+    ],
+    "populations": {
+        "genotype": [
+            1
+        ],
+        "phenotype": [
+            1
+        ],
+        "numCells": [
+            1
+        ]
+    },
+    "mutationDict": {
+        "Mut1": [
+            "1"
+        ]
+    }
+}
