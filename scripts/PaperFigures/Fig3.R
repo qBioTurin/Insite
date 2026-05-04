@@ -314,19 +314,6 @@ miniplot_list<-lapply(nD_pts_EndSize,
 plot_allFE_div<-wrap_plots(miniplot_list)
 plot_allFE_div
 
-ggsave(plot_allFE_div,
-       device = "pdf",
-       height = 5,
-       width = 15,path="Data/nD_exp",
-       file = "nD_FunEff_divided.pdf")
-
 plot_allFE<-plot/wrap_plots(miniplot_list)/plot_det_size+
   plot_layout(heights = c(1,3,2))
 plot_allFE
-
-ggsave(plot_allFE,
-        device = "pdf",
-        height = 12,
-        width = 15,
-        path="Data/nD_exp",
-        file = "nD_FunEff.pdf")
