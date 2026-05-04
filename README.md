@@ -48,16 +48,7 @@ Clone the Github repository via
 git clone https://github.com/qBioTurin/Insite.git
 ```
 
-#### Option 1: Docker (Recommended)
-
- To ensure a consistent environment with all dependencies pre-installed:
-
- ```bash
- docker pull qbioturin/insite:latest
- docker run -it qbioturin/insite R
- ```
-
-#### Option 2: Local R Installation
+Open the project in RStudio and install the package via:
 
 ```R
 # install.packages("devtools")
