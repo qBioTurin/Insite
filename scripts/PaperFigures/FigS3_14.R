@@ -28,7 +28,7 @@ for(tum_type in tum_types){
                  "--params",paste0(path,"/params.json"),
                  "--dir",path))
   }
-  sys
+  
   load(paste(path,"Parameters.RData",sep="/"))
   obs_tum<-Insite:::get_obs_tum(path_sim = paste(path,best_sim,sep="/"),
                                 depth = 10^(-3),

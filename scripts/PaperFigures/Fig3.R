@@ -3,6 +3,7 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(ggplot2)
+library(latex2exp)
 if(!require(patchwork)){
   install.packages("patchwork")
   library(patchwork)
@@ -69,10 +70,9 @@ jitter_width<-sd(nD_pts$n)/50
 jitter_height<-sd(nD_pts$D)/50
 
 EndSize_labels <- c(
-  "0.1" = "0.1 K",
-  "2" = "2 K",
-  "5" = "5 K",
-  "10" = "10 K"
+  "0.1" = "Max size = 0.1 K",
+  "2" = "Max size = 2 K",
+  "10" = "Max size = 10 K"
 )
 
 plot<-ggplot(nD_pts)+
@@ -93,7 +93,7 @@ plot<-ggplot(nD_pts)+
         panel.grid.major = element_line(color="#DFE2E0",linewidth = 0.2),
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_line(color="#DFE2E0",linewidth = 0.2),
-        strip.text = element_text(face="bold"))
+        strip.text = element_text(face="bold",size=12))
 plot
 
 plot_det_size<-ggplot(nD_pts)+
@@ -114,7 +114,7 @@ plot_det_size<-ggplot(nD_pts)+
         panel.grid.major = element_line(color="#DFE2E0",linewidth = 0.2),
         panel.grid.minor.x = element_blank(),
         panel.grid.minor.y = element_line(color="#DFE2E0",linewidth = 0.2),
-        strip.text = element_text(face="bold"))
+        strip.text.x = element_blank())
 plot_det_size
 
 
@@ -144,7 +144,15 @@ miniplot_list<-lapply(nD_pts_EndSize,
                           filter(FE!="competition")%>%
                           dplyr::select(-par_value)
                         colors_palette_comp<-colors_palette[grepl(x=names(colors_palette),pattern = "sus")]
-                        nD_pts_tbl_comp$par_value<-factor(nD_pts_tbl_comp$par_value,levels = c(0.7,0.5,0.2,0.1))
+                        nD_pts_tbl_comp$par_value<-factor(nD_pts_tbl_comp$par_value,
+                                                          levels = c(0.7,0.5,0.2,0.1),
+                                                          labels = c(
+                                                            "eta==1*','~nu==0.7",
+                                                            "eta==1*','~nu==0.5",
+                                                            "eta==1*','~nu==0.2",
+                                                            "eta==1*','~nu==0.1"
+                                                          ))
+                        
                         plot_comp_enlighted<-ggplot(nD_pts_tbl_comp)+
                           geom_ribbon(data=area_grey,aes(x=n,ymin=D,ymax = ceiling(max(nD_pts$D))),fill="#DFE2E0")+
                           geom_line(data=lin_tree,aes(x=n,y=D),color="#DFE2E0")+
@@ -165,7 +173,8 @@ miniplot_list<-lapply(nD_pts_EndSize,
                                       stroke = 0.2,
                                       size=3)+
                           scale_shape_manual(values = 21:24)+
-                          facet_grid(.~par_value)+
+                          facet_grid(.~par_value,
+                                     labeller = label_parsed)+
                           scale_fill_manual(values = colors_palette_comp)+
                           scale_y_continuous(limits = c(min(nD_pts_tbl$D),ceiling(max(nD_pts_tbl$D))))+
                           scale_x_continuous(limits = c(min(nD_pts_tbl$n),ceiling(max(nD_pts_tbl$n))),breaks = x_breaks)+
@@ -175,7 +184,7 @@ miniplot_list<-lapply(nD_pts_EndSize,
                                 panel.grid.minor = if(length(x_breaks)>3){element_blank()}else{element_line(color="#DFE2E0",linewidth = 0.2)},
                                 axis.text = element_text(size=7),
                                 axis.title = element_blank(),
-                                strip.text = element_text(size=7,face="bold"))
+                                strip.text = element_text(size=7))
                         plot_comp_enlighted
                         
                         nD_pts_tbl_growth<-nD_pts_tbl%>%
@@ -186,7 +195,7 @@ miniplot_list<-lapply(nD_pts_EndSize,
                         colors_palette_growth<-colors_palette[grepl(x=names(colors_palette),pattern = "sel_adv")]
                         nD_pts_tbl_growth$par_value<-factor(nD_pts_tbl_growth$par_value,
                                                             levels = c(0.1,0.2,1),
-                                                            labels = c("+MUT","+2MUT","+10MUT"))
+                                                            labels = c("s==0.1","s==0.2","s==1"))
                         plot_growth_enlighted<-ggplot(nD_pts_tbl_growth)+
                           geom_ribbon(data=area_grey,aes(x=n,ymin=D,ymax = ceiling(max(nD_pts$D))),fill="#DFE2E0")+
                           geom_line(data=lin_tree,aes(x=n,y=D),color="#DFE2E0")+
@@ -207,7 +216,7 @@ miniplot_list<-lapply(nD_pts_EndSize,
                                       stroke = 0.2,
                                       size=3)+
                           scale_shape_manual(values = 21:24)+
-                          facet_grid(.~par_value)+
+                          facet_grid(.~par_value,label=label_parsed)+
                           scale_fill_manual(values = colors_palette_growth)+
                           scale_y_continuous(limits = c(min(nD_pts_tbl$D),ceiling(max(nD_pts_tbl$D))))+
                           scale_x_continuous(limits = c(min(nD_pts_tbl$n),ceiling(max(nD_pts_tbl$n))),breaks =x_breaks)+
@@ -228,7 +237,7 @@ miniplot_list<-lapply(nD_pts_EndSize,
                         colors_palette_space<-colors_palette[grepl(x=names(colors_palette),pattern = "space")]
                         nD_pts_tbl_space$par_value<-factor(nD_pts_tbl_space$par_value,
                                                       levels=sort(unique(nD_pts_tbl_space$par_value)),
-                                                      labels=c("+K","+2K","+10K"))
+                                                      labels=c("k==K","k==2*K","k==10*K"))
                         plot_space_enlighted<-ggplot(nD_pts_tbl_space)+
                           geom_ribbon(data=area_grey,aes(x=n,ymin=D,ymax = ceiling(max(nD_pts$D))),fill="#DFE2E0")+
                           geom_line(data=lin_tree,aes(x=n,y=D),color="#DFE2E0")+
@@ -249,7 +258,7 @@ miniplot_list<-lapply(nD_pts_EndSize,
                                       stroke = 0.2,
                                       size=3)+
                           scale_shape_manual(values = 21:24)+
-                          facet_grid(.~par_value)+
+                          facet_grid(.~par_value,label=label_parsed)+
                           scale_fill_manual(values = colors_palette_space)+
                           scale_y_continuous(limits = c(min(nD_pts_tbl$D),ceiling(max(nD_pts_tbl$D))))+
                           scale_x_continuous(limits = c(min(nD_pts_tbl$n),ceiling(max(nD_pts_tbl$n))),breaks = x_breaks)+
