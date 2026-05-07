@@ -114,7 +114,9 @@ for(folder in folders){
   
   VAFs<-list(passenger_VAF,growth_VAF,comp_VAF,space_VAF)
   
-  dir.create(paste0("Data/Experiment1",str_remove(folder,dir)))
+  if(!dir.exists(paste0("Data/Experiment1",str_remove(folder,dir)))){
+    dir.create(paste0("Data/Experiment1",str_remove(folder,dir)),recursive = TRUE)
+  }
   save(VAFs,file=paste0("Data/Experiment1",str_remove(folder,dir),"/VAF_FunEff.RData"))
   
 }

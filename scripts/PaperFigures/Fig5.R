@@ -1,207 +1,97 @@
 library(Insite)
-if (!require("dplyr")) install.packages("dplyr",repos = "https://cloud.r-project.org")
-if (!require("tidyr")) install.packages("tidyr",repos = "https://cloud.r-project.org")
-if (!require("ggplot2")) install.packages("ggplot2",repos = "https://cloud.r-project.org")
-if (!require("stringr")) install.packages("stringr",repos = "https://cloud.r-project.org")
+library(dplyr)
+library(ggplot2)
+library(tibble)
+library(stringr)
 
-load("Data/best_fit/Noble_tum_data.RData")
-real_points$dataset[real_points$dataset=="breast_SC"]<-"breast"
+dir<-"Data/nD_exp/Sim_expanded"
+folders<-list.dirs(dir,recursive = FALSE)
 
-load("Data/best_fit/nD_points_bestfit.RData")
-
-sim_division<-list()
-for(tum_type in c("breast","kidney","lung")){
-  clus<-sim_data%>%
-    filter(dataset==tum_type)%>%
-    pull(n)%>%
-    kmeans(centers = 2)
+nD_all<-tibble()
+for(folder in folders){
   
-  names_clus<-vector()
-  names_clus[which.max(clus$centers)]<-"Right Group"
-  names_clus[which.min(clus$centers)]<-"Left Group"
+  json_params<-paste(folder,"params.json",sep="/")
+  seed<-read.table(paste(folder,"seed.txt",sep="/"))$V1
+  sim_n<-read.table(paste(folder,"sim_n.txt",sep="/"))$V1
   
-  sim_division[[tum_type]]<-sim_data%>%
-    filter(dataset==tum_type)%>%
-    bind_cols(cluster=clus$cluster)%>%
-    mutate(name=names_clus[cluster])
-    
-}
-
-v_line_df<-lapply(sim_division,function(sim_data_clustered){
-  vline_df<-sim_data_clustered%>%
-    group_by(name)%>%
-    summarise(max_n=max(n),
-           min_n=min(n))
-  vline_min<-vline_df$max_n[vline_df$name=="Left Group"]
-  vline_max<-vline_df$min_n[vline_df$name=="Right Group"]
-  vline<-(vline_min+vline_max)/2
-  return(vline)
-})%>%
-  as_tibble()%>%
-  pivot_longer(cols = c("breast","kidney","lung"),
-               names_to = "dataset",
-               values_to="x_intercept")
-
-plot<-ggplot()+
-  geom_point(
-    data=sim_data%>%arrange(centroid),
-    aes(x=n,y=D,group=sim,fill=dataset,alpha=centroid,color=interaction(centroid,dataset),size=centroid),
-    shape=21
-  )+
-  geom_vline(data = v_line_df,aes(xintercept = x_intercept),
-             color="grey",linetype="dashed")+
-  geom_point(
-    data=real_points,
-    aes(x=n,y=D),colour = "black",shape=4,stroke=1
-  )+
-  facet_wrap("dataset",scales='free')+
-  scale_fill_manual(values=c("#e76f51",
-                             "#f4a261",
-                             "#e9c46a",
-                             "#8ab17d",
-                             "#2a9d8f",
-                             "#264653"))+
-  scale_alpha_manual(values=c(0.5,1))+
-  scale_size_manual(values = c(2,3))+
-  scale_color_manual(values = c("#f7c8be","white",
-                                "#fbdbc4","white",
-                                "#f6e9c7","white",
-                                "#d3e1cd","white",
-                                "#b6dbd4","white",
-                                "#adb9be","white"))+
-  scale_x_continuous(limits=c(0,14),
-                     breaks = seq(from=0,to=14,by=2)) + 
-  scale_y_continuous(limits=c(0,20),
-                     breaks = seq(from=0,to=20,by=5))+
-  theme_classic() +
-  theme(
-    strip.background = element_blank(),
-    legend.position = "none"
-  )
-
-plot
-
-for(tum_type in unique(sim_data$dataset)){
-  load(paste("Data/best_fit",tum_type,"vcf_multiregional_allsims.RData",sep = "/"))
-  
-  mut_charact<-vcf_multiregional_all%>%
-    dplyr::group_by(mut,sim)%>%
-    mutate(mean_VAF=mean(VAF))%>%
-    ungroup()%>%
-    dplyr::count(mut,sim,fun_eff,mean_VAF)%>%
-    mutate(patterns=ifelse(n>=9,"Public",
-                           ifelse(n>=4,"Public Regional",
-                                  ifelse(n>1,"Private Regional","Private Unique"))))%>%
-    dplyr::count(patterns,sim,fun_eff,mean_VAF)
-  
-  if(tum_type=="AML"){
-    fe_lev<-sort(unique(mut_charact$fun_eff))
-  fe_lev<-fe_lev[fe_lev!="WT"]
-  fe_lev<-c("WT",fe_lev)
-  
-  plot<-mut_charact%>%
-    group_by(patterns,fun_eff)%>%
-    mutate(mean_VAF=mean(mean_VAF),
-           n=sum(n),
-           fun_eff=factor(fun_eff,levels = fe_lev),
-           patterns=factor(patterns,levels = c("Public","Public Regional","Private Regional","Private Unique")))%>%
-    ggplot()+
-    geom_col(aes(x=fun_eff,color=patterns,fill=patterns,y = n),position="fill",width=0.5)+
-    scale_fill_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-    scale_color_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-    
-    theme_void()+
-    coord_fixed(ratio = 4)+
-    labs(title = tum_type)+
-    theme(axis.text.x = element_text(angle=90,hjust = 1,size=9),
-          title = element_text(face = "bold"),
-          legend.position = "none")
-  
-  print(plot)
-  
-  }else if(tum_type=="mesothelioma"){
-    plot<-mut_charact%>%
-      mutate(fe_group=factor(ifelse(fun_eff=="WT","WT",
-                                    ifelse(grepl("Strong",fun_eff),"Strong Res",
-                                           ifelse(grepl("Res",fun_eff),"Mild Res",
-                                                  ifelse(grepl("S",fun_eff),"Limit Evasion",
-                                                         "Proliferation")))
-      ),
-      levels=c("WT","Proliferation","Limit Evasion","Mild Res","Strong Res"))
-      )%>%
-      group_by(patterns,fe_group)%>%
-      mutate(mean_VAF=mean(mean_VAF),
-             n=sum(n))%>%
-      mutate(patterns=factor(patterns,levels = c("Public","Public Regional","Private Regional","Private Unique")))%>%
-      ggplot()+
-      geom_col(aes(x=fe_group,color=patterns,fill=patterns,y = n),position="fill",width=0.5)+
-      scale_fill_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-      scale_color_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-      theme_void()+
-      coord_fixed(ratio = 4)+
-      labs(title = tum_type)+
-      theme(axis.text.x = element_text(angle=90,hjust = 1,size=9),
-            title = element_text(face = "bold"),
-            legend.position = "none")
-    
-    print(plot)
-  }else if(tum_type=="uveal"){
-    plot<-mut_charact%>%
-      mutate(fe_group=factor(ifelse(fun_eff=="WT","WT",
-                                    ifelse(fun_eff=="Res1","Strong Res",
-                                           ifelse(fun_eff=="Res2","Med Res",
-                                                  ifelse(grepl("Res",fun_eff),"Mild Res",
-                                                         "Limit Evasion")))
-      ),
-      levels=c("WT","Limit Evasion","Mild Res","Med Res","Strong Res"))
-      )%>%
-      group_by(patterns,fe_group)%>%
-      mutate(mean_VAF=mean(mean_VAF),
-             n=sum(n))%>%
-      mutate(patterns=factor(patterns,levels = c("Public","Public Regional","Private Regional","Private Unique")))%>%
-      ggplot()+
-      geom_col(aes(x=fe_group,color=patterns,fill=patterns,y = n),position="fill",width=0.5)+
-      scale_fill_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-      scale_color_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-      theme_void()+
-      coord_fixed(ratio = 4)+
-      labs(title = tum_type)+
-      theme(axis.text.x = element_text(angle=90,hjust = 1,size=9),
-            title = element_text(face = "bold"),
-            legend.position = "none")
-    
-    print(plot)
-  }else{
-    plot<-mut_charact%>%
-      left_join(sim_division[[tum_type]]%>%
-                  ungroup()%>%
-              mutate(sim=str_remove(sim,"sim"))%>%
-                dplyr::select(sim,name),by = "sim")%>%
-      mutate(fe_group=factor(ifelse(fun_eff=="WT","WT",
-                                    ifelse(grepl("Strong",fun_eff),"Strong Res",
-                                           ifelse(grepl("Res",fun_eff),"Mild Res",
-                                                  ifelse(grepl("S",fun_eff),"Limit Evasion",
-                                                         "Proliferation")))),
-                             levels = c("WT","Proliferation","Limit Evasion","Mild Res","Strong Res"))
-      )%>%
-      dplyr::group_by(patterns,fe_group,name)%>%
-      dplyr::mutate(mean_VAF=mean(mean_VAF),
-             n=sum(n))%>%
-      mutate(patterns=factor(patterns,levels = c("Public","Public Regional","Private Regional","Private Unique")))%>%
-      ggplot()+
-      geom_col(aes(x=name,color=patterns,fill=patterns,y = n),position="fill")+
-      facet_wrap("fe_group",ncol=4)+
-      scale_fill_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-      scale_color_manual(values = c("#5F021F","#9A5B62","#C1BEA3","#FAF8D4"))+
-      theme_void()+
-      coord_fixed(ratio = 7)+
-      labs(title = tum_type)+
-      theme(axis.text.x = element_text(angle=90,hjust = 1,size=9),
-            title = element_text(face = "bold"),
-            legend.position = "none")
-    
-    print(plot)
+  if(!dir.exists(paste(folder,paste0("sim",sim_n),sep="/"))){
+    system(paste("Rscript scripts/run_simulation.R --seed",seed,
+                 "--Nexp",sim_n,
+                 "--params",json_params,
+                 "--dir",folder)
+    )
   }
+  
+  load(paste(folder,"Parameters.RData",sep="/"))
+  obs_tum<-Insite:::get_obs_tum(path_sim = paste(folder,paste0("sim",sim_n),sep="/"),
+                                depth = 10^(-3),
+                                parameters = parameters)
+  Clones_df<-Insite:::get_muller_plot_info(obs_Pop_ID = obs_tum$obs_Pop_ID,
+                                           obs_tumor_tibble = obs_tum$obs_tumor_tibble,
+                                           functional_effects = parameters@functional_effects,
+                                           freq = FALSE)
+  fun_eff_nmut<-stringr::str_count(unique(Clones_df$fun_eff), ",")+1
+  colors<-vector()
+  colors[fun_eff_nmut==1]<-"#C7D66D"
+  colors[fun_eff_nmut==2]<-"#D58936"
+  colors[fun_eff_nmut==3]<-"#AF939F"
+  colors[fun_eff_nmut==4]<-"#e5d352"
+  colors[fun_eff_nmut==5]<-"#28666E"
+  names(colors)<-unique(Clones_df$fun_eff)
+  
+  p<-Insite:::get_muller_plot_download(Clones_df = Clones_df,freq = FALSE,palette = colors)
+  
+  print(p+
+        ggtitle(str_remove(folder,"Data/nD_exp/Sim_expanded/"))+
+          theme(plot.title = element_text(face="bold",size=14)))
+  
+  system(paste("Rscript scripts/derive_nD_indices.R --sim_dir",paste(folder,paste0("sim",sim_n),sep="/"),
+               "--path_out",folder,
+               "--seq_day",Inf)
+  )
+  
+  nD_tum<-read.table(paste(folder,"nD_indices_Final.txt",sep="/"),header = TRUE)%>%
+    mutate(par_set=str_remove(folder,"Data/nD_exp/Sim_expanded/"))
+  nD_all<-bind_rows(nD_all,nD_tum)
 }
 
+nD_all<-nD_all%>%mutate(FE=c("competition","competition","null","growth"))
+colors_palette<-c("Proliferation"="#DDA77B",
+                  "CompetitionMild"="#C6A5A5",
+                  "CompetitionStrong"="#714747",
+                  "Passenger"="#A8BCDF"
+)
 
+area_grey<-tibble(
+  n=seq(1,2,by=0.01)
+)%>%
+  mutate(D=(2-n)^(-2))%>%
+  filter(D<ceiling(max(nD_all$D)+1))
+
+mean_branch<-tibble(
+  n=seq(1,ceiling(max(nD_all$n)+1),by=0.01)
+)%>%
+  mutate(D=9*(2*n-1)/8)
+
+lin_tree<-tibble(
+  n=seq(1,ceiling(max(nD_all$n)+1),by=0.01)
+)%>%
+  mutate(
+    frac_n=n-floor(n),
+    D=((1-frac_n)^2+frac_n^2)^(-1))
+
+ggplot(nD_all)+
+  geom_ribbon(data=area_grey,aes(x=n,ymin=D,ymax = ceiling(max(nD_all$D)+1)),fill="#DFE2E0")+
+  geom_line(data=lin_tree,aes(x=n,y=D),color="#DFE2E0")+
+  geom_point(aes(x=n,y=D,fill=par_set,shape=FE),
+              color="white",stroke = 0.2,size=6,alpha=1)+
+  scale_shape_manual(values = 21:24)+
+  scale_fill_manual(values = colors_palette)+
+  scale_y_continuous(limits = c(1,ceiling(max(nD_all$D)+1)))+
+  scale_x_continuous(limits = c(1,ceiling(max(nD_all$n)+1)),breaks = 1:ceiling(max(nD_all$n)+1))+
+  theme_minimal()+
+  theme(legend.position = "none",
+        panel.spacing.x = unit(30,"pt"),
+        panel.grid.major = element_line(color="#DFE2E0",linewidth = 0.2),
+        panel.grid.minor = element_blank(),
+        strip.text = element_text(face="bold"))

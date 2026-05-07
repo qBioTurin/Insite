@@ -10,17 +10,22 @@ params_names<-list.files(paste(dir,"params",sep="/"))
 params_names<-str_remove(params_names[grepl(".json",params_names)],".json")
 prop_cells_seq<-0.01
 
+if(!dir.exists("Data/Experiment2/")){
+  dir.create("Data/Experiment2/",recursive = TRUE)
+}
+
 # PASSENGER
 par_set<-"params_passenger"
 sims<-list.files(paste(dir,"results",par_set,sep="/"))
 sims<-sims[grepl("sim",sims)]
 set.seed(1)
+load(paste(dir,"results",par_set,"Parameters.RData",sep="/"))
 vcf_list<-lapply(sims,
        function(sim){
          Zprovv_file<-list.files(paste(dir,"results",par_set,sim,sep="/"))
          load(paste(dir,"results",par_set,sim,Zprovv_file,sep="/"))
          
-         load(paste(dir,"results",par_set,"Parameters.RData",sep="/"))
+         
          starting_mut<-sapply(starting_gen, paste0,collapse = "_")
          
          vcf_pure<-Insite:::theoretical_sequencing(Zprovv=Zprovv,
@@ -55,12 +60,13 @@ for(par_set in par_sets){
     sel_adv<-jsonlite::fromJSON(txt =  file)$functionalEvents$params$proliferativeAdvantage[2]
     sims<-list.files(paste(dir,"results",par_set,sep="/"))
     sims<-sims[grepl("sim",sims)]
+    load(paste(dir,"results",par_set,"Parameters.RData",sep="/"))
+    
     vcf_list<-lapply(sims,
                      function(sim){
                        Zprovv_file<-list.files(paste(dir,"results",par_set,sim,sep="/"))
                        load(paste(dir,"results",par_set,sim,Zprovv_file,sep="/"))
                        
-                       load(paste(dir,"results",par_set,"Parameters.RData",sep="/"))
                        starting_mut<-sapply(starting_gen, paste0,collapse = "_")
                        
                        vcf_pure<-Insite:::theoretical_sequencing(Zprovv=Zprovv,

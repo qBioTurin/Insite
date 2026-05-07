@@ -8,6 +8,10 @@ folder_sim<-paste(dir,"results",sep="/")
 exp_folders<-list.dirs(folder_sim,full.names = TRUE,recursive = FALSE)
 folder_out<-"Data/nD_exp"
 
+if(!dir.exists(folder_out)){
+  dir.create(folder_out,recursive = TRUE)
+}
+
 lapply(exp_folders,
        function(exp_folder){
          read.table(paste(exp_folder,"seed.txt",sep="/"),header = TRUE)%>%
@@ -49,5 +53,5 @@ nD_pts<-lapply(exp_folders,
                })%>%
   bind_rows()
 
-save(nD_pts,file = "Data/nD_exp/nD_pts.RData")
-
+save(nD_pts,file = paste0(folder_out,"/nD_pts.RData"))
+file.copy(from = paste0(dir,"/seeds.txt"), to = paste0(folder_out,"/seeds.txt"))
