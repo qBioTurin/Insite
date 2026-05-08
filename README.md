@@ -5,8 +5,6 @@
 
 This repository contains the core **Insite** R package, the simulation engine, the analysis pipelines, and the scripts required to reproduce all results and figures presented in the manuscript.
 
-🌐 **Related Resources**
-
 The project ecosystem also includes:
 
 - **[Insite_Interface](https://github.com/qBioTurin/Insite_Interface):** A Docker-based NextJS application providing a graphical user interface for interactive simulations and visualization.
