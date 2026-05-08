@@ -1,7 +1,7 @@
 <img src="https://github.com/user-attachments/assets/9ff1212f-aed2-4611-929e-6b40f45b791e" alt="Opera_senza_titolo 2" width="1703" height="380"/>
 
 # In Silico Tumor Evolution
-## A New Cancer Progression Model: From synthetic tumors to real data and back
+## Repository of _A New Cancer Progression Model: From synthetic tumors to real data and back_
 
 This repository contains the core **Insite** R package, the data analysis pipelines, and the scripts required to reproduce all results and figures presented in our publication.
 
