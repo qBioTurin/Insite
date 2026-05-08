@@ -5,7 +5,7 @@
 
 This repository contains the core **Insite** R package, the simulation engine, the analysis pipelines, and the scripts required to reproduce all results and figures presented in the manuscript.
 
-## 🌐 Related Resources
+🌐 **Related Resources**
 
 The project ecosystem also includes:
 
