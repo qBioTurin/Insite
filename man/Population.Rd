@@ -7,13 +7,13 @@
 Population(Population_with_size_nmut)
 }
 \arguments{
-\item{Population_with_size_nmut}{A \code{\linkS4class{Population_with_size_nmut}}
+\item{Population_with_size_nmut}{A \code{\link[=Population_with_size_nmut-class]{Population_with_size_nmut}}
 object.}
 }
 \value{
-A \code{\linkS4class{Population}} object.
+A \code{\link[=Population-class]{Population}} object.
 }
 \description{
-Returns the \code{\linkS4class{Population}} object stored inside a
-\code{\linkS4class{Population_with_size_nmut}} object.
+Returns the \code{\link[=Population-class]{Population}} object stored inside a
+\code{\link[=Population_with_size_nmut-class]{Population_with_size_nmut}} object.
 }

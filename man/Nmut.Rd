@@ -7,7 +7,7 @@
 Nmut(Population_with_size_nmut)
 }
 \arguments{
-\item{Population_with_size_nmut}{A \code{\linkS4class{Population_with_size_nmut}}
+\item{Population_with_size_nmut}{A \code{\link[=Population_with_size_nmut-class]{Population_with_size_nmut}}
 object.}
 }
 \value{
@@ -15,5 +15,5 @@ A numeric value.
 }
 \description{
 Returns the mutation count stored in a
-\code{\linkS4class{Population_with_size_nmut}} object.
+\code{\link[=Population_with_size_nmut-class]{Population_with_size_nmut}} object.
 }

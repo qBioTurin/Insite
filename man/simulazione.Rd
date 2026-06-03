@@ -38,7 +38,7 @@ the starting genotypes.}
 \item{Ncells_start}{Numeric vector giving the initial number of cells for
 each starting population.}
 
-\item{parameters}{A \code{\linkS4class{Parameters}} object containing global simulation
+\item{parameters}{A \code{\link[=Parameters-class]{Parameters}} object containing global simulation
 parameters.}
 
 \item{tmax}{Maximum simulation time.}

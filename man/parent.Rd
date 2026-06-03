@@ -7,10 +7,10 @@
 parent(Population)
 }
 \arguments{
-\item{Population}{A \code{\linkS4class{Population}} object.}
+\item{Population}{A \code{\link[=Population-class]{Population}} object.}
 }
 \value{
-A \code{\linkS4class{Population}} object corresponding to the parent population.
+A \code{\link[=Population-class]{Population}} object corresponding to the parent population.
 }
 \description{
 Returns the parent of a population by removing the last genotype and

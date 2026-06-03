@@ -11,7 +11,7 @@ number of mutations generated from it.
 \section{Slots}{
 
 \describe{
-\item{\code{Population}}{A \code{\linkS4class{Population}} object.}
+\item{\code{Population}}{A \code{\link[=Population-class]{Population}} object.}
 
 \item{\code{Ncells}}{Numeric value giving the number of cells in the population.}
 

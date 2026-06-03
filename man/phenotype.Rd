@@ -7,11 +7,11 @@
 phenotype(Population)
 }
 \arguments{
-\item{Population}{A \code{\linkS4class{Population}} object.}
+\item{Population}{A \code{\link[=Population-class]{Population}} object.}
 }
 \value{
 A sorted vector representing the phenotype.
 }
 \description{
-Returns the sorted phenotype stored in a \code{\linkS4class{Population}} object.
+Returns the sorted phenotype stored in a \code{\link[=Population-class]{Population}} object.
 }

@@ -7,11 +7,11 @@
 genotype(Population)
 }
 \arguments{
-\item{Population}{A \code{\linkS4class{Population}} object.}
+\item{Population}{A \code{\link[=Population-class]{Population}} object.}
 }
 \value{
 A vector representing the genotype.
 }
 \description{
-Returns the genotype stored in a \code{\linkS4class{Population}} object.
+Returns the genotype stored in a \code{\link[=Population-class]{Population}} object.
 }
