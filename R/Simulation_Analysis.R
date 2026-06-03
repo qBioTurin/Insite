@@ -49,7 +49,7 @@ setMethod("get_muller_plot",
             }
             
             p<-get_muller_plot_download(Clones_df = Clones_df,
-                                        freq = relative,
+                                        freq = freq,
                                         palette = palette)
             
             p <- p + plot_layout(guides = "collect") & 
